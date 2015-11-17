@@ -24,8 +24,8 @@ int stoi_with_min( const char *argv, const int min ) {
 
 void uMain::main() {
     int seed = getpid();
-    char *configFile = "soda.config";
-    ConfigParams config;
+    std::string configFile( "soda.config" );
+    ConfigParms config;
 
     try {
         switch ( argc ) {
@@ -35,7 +35,7 @@ void uMain::main() {
             case 1: break;
         }
 
-        processConfigFile( configFile, config );
+        processConfigFile( configFile.c_str(), config );
     }
     catch ( std::logic_error &e ) {
         std::cerr << e.what()
@@ -88,10 +88,10 @@ void uMain::main() {
         config.numStudents
     );
 
-    VendingMaching *vendingMachines[config.numVendingMachines];
+    VendingMachine *vendingMachines[config.numVendingMachines];
 
-    for ( int id = 0; id < config.numVendingMachines; id++ ) {
-        vendingMachine[id] = new VendingMachine(
+    for ( unsigned int id = 0; id < config.numVendingMachines; id++ ) {
+        vendingMachines[id] = new VendingMachine(
             printer,
             nameServer,
             id,
@@ -103,7 +103,7 @@ void uMain::main() {
     {
         BottlingPlant bottlingPlant(
             printer,
-            nameserver,
+            nameServer,
             config.numVendingMachines,
             config.maxShippedPerFlavour,
             config.maxStockPerFlavour,
@@ -112,7 +112,7 @@ void uMain::main() {
 
         Student *students[config.numStudents];
 
-        for ( int id = 0; id < config.numStudents; id++ ) {
+        for ( unsigned int id = 0; id < config.numStudents; id++ ) {
             students[id] = new Student(
                 printer,
                 nameServer,
@@ -129,12 +129,12 @@ void uMain::main() {
         * otherwise, a deadlock can occur
         */
 
-        for ( int id = 0; id < config.numStudents; id++ ) {
+        for ( unsigned int id = 0; id < config.numStudents; id++ ) {
             delete students[id];
         }
     }
 
-    for ( int id = 0; id < config.numVendingMachines; id++ ) {
+    for ( unsigned int id = 0; id < config.numVendingMachines; id++ ) {
         delete vendingMachines[id];
     }
 }

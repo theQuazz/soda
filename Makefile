@@ -2,7 +2,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -multi -Wall -Wno-unused-label -MMD -O2
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-SOURCES = ${wildcard:*.cc} 			# build all ".cc" files
+SOURCES = ${wildcard *.cc} 			# build all ".cc" files
 OBJECTS = ${SOURCES:.cc=.o}			# substitute ".cc" with ".o"
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
 EXEC = soda

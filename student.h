@@ -1,6 +1,11 @@
 #ifndef __STUDENT_H__
 #define __STUDENT_H__
 
+#include "printer.h"
+#include "nameserver.h"
+#include "watcardoffice.h"
+#include "groupoff.h"
+
 _Task Student {
     void main();
   public:
