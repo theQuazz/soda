@@ -1,0 +1,6 @@
+# generated
+*.o
+*.d
+
+# vim
+*.sw*
