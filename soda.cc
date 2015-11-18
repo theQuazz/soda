@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "MPRNG.h"
 #include "config.h"
 #include "printer.h"
 #include "bank.h"
@@ -60,6 +61,8 @@ void uMain::main() {
 
         return;
     }
+
+    get_random().seed( seed );
 
      /* It then creates in order the printer, bank, parent, WATCard office,
       * groupoff, name server, vending machines, bottling plant, and students.
