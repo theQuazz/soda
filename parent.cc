@@ -8,7 +8,7 @@ Parent::Parent(
     printer( prt ),
     bank( bank ),
     numStudents( numStudents ),
-    delay( parentDelay ) {}
+    delay( parentalDelay ) {}
 
 void Parent::main() {
     printer.print( Printer::Parent, 'S' );

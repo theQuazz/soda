@@ -3,7 +3,7 @@
 
 #include "printer.h"
 #include "bank.h"
-#include "mprng.h"
+#include "MPRNG.h"
 
 _Task Parent {
     enum {
