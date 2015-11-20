@@ -5,6 +5,13 @@
 #include "nameserver.h"
 
 _Task BottlingPlant {
+    Printer &printer;
+    NameServer &nameServer;
+    const unsigned int numVendingMachines;
+    const unsigned int maxShippedPerFlavour;
+    const unsigned int maxStockPerFlavour;
+    const unsigned int timeBetweenShipments;
+
     void main();
   public:
     _Event Shutdown {};                    // shutdown plant
