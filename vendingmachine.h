@@ -6,6 +6,10 @@
 #include "watcard.h"
 
 _Task VendingMachine {
+    Printer &printer;
+    const unsigned int id, sodaCost, maxStockPerFlavour;
+    bool restocking;
+
     void main();
   public:
     enum Flavours {};                      // flavours of soda (YOU DEFINE)
