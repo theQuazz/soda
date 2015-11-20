@@ -7,6 +7,12 @@
 #include "groupoff.h"
 
 _Task Student {
+    Printer &printer;
+    NameServer &nameServer;
+    WATCardOffice &cardOffice;
+    Groupoff &groupoff;
+    const unsigned int id, maxPurchases;
+
     void main();
   public:
     Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, Groupoff &groupoff,
