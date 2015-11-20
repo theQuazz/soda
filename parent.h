@@ -3,8 +3,18 @@
 
 #include "printer.h"
 #include "bank.h"
+#include "mprng.h"
 
 _Task Parent {
+    enum {
+        MIN_DEPOSIT = 1,
+        MAX_DEPOSIT = 3,
+    };
+
+    Printer &printer;
+    Bank &bank;
+    const unsigned int numStudents, delay;
+
     void main();
   public:
     Parent( Printer &prt, Bank &bank, unsigned int numStudents, unsigned int parentalDelay );
