@@ -14,7 +14,7 @@ void Groupoff::main() {
     printer.print( Printer::Groupoff, 'S' );
 
     for ( unsigned int i = 0; i < numStudents; i++ ) {
-        _Accept( ~Groupoff );
+        _Accept( giftCard );
     }
 
     for ( unsigned int i = 0; i < numStudents; i++ ) {
