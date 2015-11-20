@@ -36,6 +36,7 @@ void uMain::main() {
             case 1: break;
         }
 
+        get_random().seed( seed );
         processConfigFile( configFile.c_str(), config );
     }
     catch ( std::logic_error &e ) {
@@ -61,8 +62,6 @@ void uMain::main() {
 
         return;
     }
-
-    get_random().seed( seed );
 
      /* It then creates in order the printer, bank, parent, WATCard office,
       * groupoff, name server, vending machines, bottling plant, and students.
