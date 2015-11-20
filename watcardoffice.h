@@ -12,12 +12,21 @@ _Task WATCardOffice {
         WATCard::FWATCard result;          // return future
         Job( Args args ) : args( args ) {}
     };
-    _Task Courier {};                      // communicates with bank
+    _Task Courier {                        // communicates with bank
+        void main() {}
+      public:
+        Courier() {}
+    };
+
+    Printer &printer;
+    Bank &bank;
+    Courier *couriers;
 
     void main();
   public:
     _Event Lost {};                        // lost WATCard
     WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers );
+    ~WATCardOffice();
     WATCard::FWATCard create( unsigned int sid, unsigned int amount );
     WATCard::FWATCard transfer( unsigned int sid, unsigned int amount, WATCard *card );
     Job *requestWork();
