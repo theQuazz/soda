@@ -79,6 +79,7 @@ void uMain::main() {
     WATCardOffice office( printer, bank, config.numCouriers );
 
     Groupoff groupoff(
+        printer,
         config.numStudents,
         config.sodaCost,
         config.groupoffDelay
