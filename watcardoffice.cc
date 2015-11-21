@@ -23,7 +23,6 @@ WATCardOffice::~WATCardOffice() {
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
     Job *job = new Job( { sid, amount, NULL } );
     jobs.push_back( job );
-    bench.signal();
     return job->result;
 }
 
@@ -99,9 +98,11 @@ void WATCardOffice::main() {
         }
         or _Accept( create ) {
             printer.print( Printer::WATCardOffice, 'C', jobs.back()->args.sid, jobs.back()->args.amount );
+            bench.signalBlock();
         }
         or _Accept( transfer ) {
             printer.print( Printer::WATCardOffice, 'T', jobs.back()->args.sid, jobs.back()->args.amount );
+            bench.signalBlock();
         }
         or _Accept( requestWork ) {
         }
