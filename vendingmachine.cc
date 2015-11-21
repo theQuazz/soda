@@ -4,22 +4,38 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
     printer( prt ),
     id( id ),
     sodaCost( sodaCost ),
-    maxStockPerFlavour( maxStockPerFlavour ),
-    restocking( false )
+    maxStockPerFlavour( maxStockPerFlavour )
 {
+    for ( unsigned int i = 0; i < NUM_FLAVOURS; i++ ) {
+        stock[i] = maxStockPerFlavour;
+    }
+
     nameServer.VMregister( this );
 }
 
 void VendingMachine::buy( Flavours flavour, WATCard &card ) {
+    if ( card.getBalance() < sodaCost ) {
+        _Throw Funds();
+    }
+
+    if ( ! stock[flavour] ) {
+        _Throw Stock();
+    }
+
+    stock[flavour] -= 1;
+
+    card.withdraw( sodaCost );
+
+    printer.print( Printer::Vending, id, 'B', flavour, stock[flavour] );
 }
 
 unsigned int *VendingMachine::inventory() {
-    restocking = true;
-    return NULL;
+    printer.print( Printer::Vending, id, 'r', sodaCost );
+    return stock;
 }
 
 void VendingMachine::restocked() {
-    restocking = false;
+    printer.print( Printer::Vending, id, 'R', sodaCost );
 }
 
 _Nomutex unsigned int VendingMachine::cost() {
@@ -31,14 +47,21 @@ _Nomutex unsigned int VendingMachine::getId() {
 }
 
 void VendingMachine::main() {
-    for ( ;; ) {
-        _Accept( ~VendingMachine ) {
+    printer.print( Printer::Vending, id, 'S', sodaCost );
+
+    try {
+        for ( ;; ) {
+            _Accept( ~VendingMachine ) {
+                printer.print( Printer::Vending, id, 'F' );
+                break;
+            }
+            or _Accept( buy ) {
+            }
+            or _Accept( inventory ) {
+              _Accept( restocked );
+            }
         }
-        or _When( ! restocking ) _Accept( buy ) {
-        }
-        or _Accept( inventory ) {
-        }
-        or _Accept( restocked ) {
-        }
+    }
+    _CatchResume( uMutexFailure::RendezvousFailure ) {
     }
 }

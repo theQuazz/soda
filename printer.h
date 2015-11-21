@@ -17,7 +17,7 @@ _Monitor Printer {
         int value1, value2;
     } *buffer;
 
-    void finished( Kind kind, unsigned int lid );
+    void finished( unsigned int index );
     void flush();
 
   public:

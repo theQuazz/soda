@@ -73,7 +73,17 @@ void Printer::print( Printer::Kind kind, unsigned int lid, char state, int value
 }
 
 void Printer::print( Printer::Kind kind, unsigned int lid, char state, int value1, int value2 ) {
-    BufferElement &el = buffer[kind + lid];
+    unsigned int index = kind + lid;
+
+    if ( kind > Student ) {
+      index += numStudents - 1;
+    }
+
+    if ( kind > Vending ) {
+      index += numVendingMachines - 1;
+    }
+
+    BufferElement &el = buffer[index];
 
     if ( el.used ) flush();
 
@@ -82,7 +92,7 @@ void Printer::print( Printer::Kind kind, unsigned int lid, char state, int value
     el.value1 = value1;
     el.value2 = value2;
 
-    if ( state == 'F' ) finished( kind, lid );
+    if ( state == 'F' ) finished( index );
 }
 
 void Printer::flush() {
@@ -90,7 +100,7 @@ void Printer::flush() {
 
     for ( unsigned int i = 0; i < numTotal; i++ ) {
         if ( i ) out << '\t';
-        if ( !buffer[i].used ) continue;
+        if ( ! buffer[i].used ) continue;
 
         buffer[i].used = false;
 
@@ -106,12 +116,10 @@ void Printer::flush() {
     out << std::endl;
 }
 
-void Printer::finished( Printer::Kind kind, unsigned int lid ) {
+void Printer::finished( unsigned int index ) {
     std::osacquire out( std::cout );
 
-    unsigned int id = kind + lid;
-
-    buffer[id].used = false;
+    buffer[index].used = false;
 
     for ( unsigned int i = 0; i < numTotal; i++ ) {
         if ( buffer[i].used ) {
@@ -123,8 +131,8 @@ void Printer::finished( Printer::Kind kind, unsigned int lid ) {
     for ( unsigned int i = 0; i < numTotal; i++ ) {
         if ( i ) std::cout << '\t';
 
-        if ( i == id ) {
-            out << buffer[i].state;
+        if ( i == index ) {
+            out << 'F';
         }
         else {
             out << "...";

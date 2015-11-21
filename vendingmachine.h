@@ -6,13 +6,23 @@
 #include "watcard.h"
 
 _Task VendingMachine {
+  public:
+    enum Flavours {                         // flavours of soda (YOU DEFINE)
+        Cola,
+        RootBeer,
+        GingerAle,
+        CreamSoda
+    };
+    enum { NUM_FLAVOURS = CreamSoda + 1 };
+
+  private:
     Printer &printer;
+    unsigned int stock[NUM_FLAVOURS];
     const unsigned int id, sodaCost, maxStockPerFlavour;
-    bool restocking;
 
     void main();
+
   public:
-    enum Flavours {};                      // flavours of soda (YOU DEFINE)
     _Event Funds {};                       // insufficient funds
     _Event Stock {};                       // out of stock for particular flavour
     VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,

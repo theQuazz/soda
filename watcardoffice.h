@@ -1,26 +1,37 @@
 #ifndef __WATCARDOFFICE_H__
 #define __WATCARDOFFICE_H__
 
+#include "MPRNG.h"
 #include "watcard.h"
 #include "printer.h"
 #include "bank.h"
 
 _Task WATCardOffice {
-    struct Args {};
+    struct Args {
+        unsigned int sid, amount;
+        WATCard *curr;
+    };
     struct Job {                           // marshalled arguments and return future
         Args args;                         // call arguments (YOU DEFINE "Args")
         WATCard::FWATCard result;          // return future
         Job( Args args ) : args( args ) {}
     };
     _Task Courier {                        // communicates with bank
-        void main() {}
+        Printer &printer;
+        WATCardOffice &office;
+        Bank &bank;
+        const unsigned int id;
+
+        void main();
       public:
-        Courier() {}
+        Courier( Printer& printer, WATCardOffice &office, Bank &bank, unsigned int id );
     };
 
+    unsigned int numCouriers;
     Printer &printer;
     Bank &bank;
-    Courier *couriers;
+    Courier **couriers;
+    Job *job;
 
     void main();
   public:

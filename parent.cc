@@ -19,9 +19,11 @@ void Parent::main() {
         unsigned int student = get_random()( 0, numStudents - 1 );
         unsigned int amount = get_random()( MIN_DEPOSIT, MAX_DEPOSIT );
         bank.deposit( student, amount );
+        printer.print( Printer::Parent, 'D', student, amount );
 
         _Accept( ~Parent ) {
             printer.print( Printer::Parent, 'F' );
+            break;
         }
         _Else {}
     }
