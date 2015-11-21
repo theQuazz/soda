@@ -1,6 +1,8 @@
 #ifndef __WATCARDOFFICE_H__
 #define __WATCARDOFFICE_H__
 
+#include <list>
+
 #include "MPRNG.h"
 #include "watcard.h"
 #include "printer.h"
@@ -31,7 +33,8 @@ _Task WATCardOffice {
     Printer &printer;
     Bank &bank;
     Courier **couriers;
-    Job *job;
+    std::list<Job *> jobs;
+    uCondition bench;
 
     void main();
   public:

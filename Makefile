@@ -1,5 +1,5 @@
 CXX = u++					# compiler
-CXXFLAGS = -g -multi -Wall -Wno-unused-label -MMD -O2
+CXXFLAGS = -g -multi -Wall -Wno-unused-label -MMD -gdwarf-3
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 SOURCES = ${wildcard *.cc} 			# build all ".cc" files

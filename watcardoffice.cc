@@ -21,15 +21,23 @@ WATCardOffice::~WATCardOffice() {
 }
 
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
-    return transfer( sid, amount, NULL );
+    Job *job = new Job( { sid, amount, NULL } );
+    jobs.push_back( job );
+    bench.signal();
+    return job->result;
 }
 
 WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount, WATCard *card ) {
-    job = new Job( { sid, amount, card } );
+    Job *job = new Job( { sid, amount, card } );
+    jobs.push_back( job );
+    bench.signal();
     return job->result;
 }
 
 WATCardOffice::Job *WATCardOffice::requestWork() {
+    if ( jobs.empty() ) bench.wait();
+    Job *job = jobs.front();
+    jobs.pop_front();
     return job;
 }
 
@@ -78,21 +86,24 @@ void WATCardOffice::main() {
     
     for ( ;; ) {
         _Accept( ~WATCardOffice ) {
-            std::cout << job << std::endl;
-            job = NULL;
-            for ( unsigned int i = 0; i < numCouriers; i++ ) {
-                _Accept( requestWork );
+            for ( Job *job : jobs ) {
+                delete job;
             }
+
+            for ( unsigned int i = 0; i < numCouriers; i++ ) {
+                jobs.push_back( NULL );
+            }
+
             printer.print( Printer::WATCardOffice, 'F' );
             break;
         }
         or _Accept( create ) {
-            printer.print( Printer::WATCardOffice, 'C', job->args.sid, job->args.amount );
-            _Accept( requestWork );
+            printer.print( Printer::WATCardOffice, 'C', jobs.back()->args.sid, jobs.back()->args.amount );
         }
         or _Accept( transfer ) {
-            printer.print( Printer::WATCardOffice, 'T', job->args.sid, job->args.amount );
-            _Accept( requestWork );
+            printer.print( Printer::WATCardOffice, 'T', jobs.back()->args.sid, jobs.back()->args.amount );
+        }
+        or _Accept( requestWork ) {
         }
     }
 }
