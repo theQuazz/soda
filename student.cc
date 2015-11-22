@@ -17,7 +17,7 @@ Student::Student(
 void Student::main() {
     unsigned int numPurchasesLeft = get_random()( 1, maxPurchases - 1 );
     VendingMachine::Flavours favourite = static_cast<VendingMachine::Flavours>(
-            get_random()( 0, 3 )
+            get_random()( 0, VendingMachine::NUM_FLAVOURS - 1 )
     );
 
     printer.print( Printer::Student, id, 'S', favourite, numPurchasesLeft );

@@ -93,7 +93,6 @@ void Printer::print( Printer::Kind kind, unsigned int lid, char state, int value
     el.value2 = value2;
 
     if ( state == 'F' ) finished( index );
-    else flush();
 }
 
 void Printer::flush() {
