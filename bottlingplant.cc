@@ -22,6 +22,8 @@ void BottlingPlant::getShipment( unsigned int cargo[] ) {
     for ( unsigned int i = 0; i < VendingMachine::NUM_FLAVOURS; i++ ) {
         cargo[i] = production[i];
     }
+
+    printer.print( Printer::BottlingPlant, 'P' );
 }
 
 void BottlingPlant::main() {
@@ -30,9 +32,13 @@ void BottlingPlant::main() {
     for ( ;; ) {
         yield( timeBetweenShipments );
 
+        unsigned int numProduced = 0;
         for ( unsigned int i = 0; i < VendingMachine::NUM_FLAVOURS; i++ ) {
             production[i] = get_random()( 0, maxShippedPerFlavour );
+            numProduced += production[i];
         }
+
+        printer.print( Printer::BottlingPlant, 'G', numProduced );
 
         _Accept( ~BottlingPlant ) {
             shutdown = true;

@@ -30,12 +30,12 @@ void VendingMachine::buy( Flavours flavour, WATCard &card ) {
 }
 
 unsigned int *VendingMachine::inventory() {
-    printer.print( Printer::Vending, id, 'r', sodaCost );
+    printer.print( Printer::Vending, id, 'r' );
     return stock;
 }
 
 void VendingMachine::restocked() {
-    printer.print( Printer::Vending, id, 'R', sodaCost );
+    printer.print( Printer::Vending, id, 'R' );
 }
 
 _Nomutex unsigned int VendingMachine::cost() {
