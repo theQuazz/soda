@@ -62,5 +62,7 @@ void Student::main() {
         }
     }
 
+    delete watcard();
+
     printer.print( Printer::Student, id, 'F' );
 }

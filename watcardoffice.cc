@@ -21,9 +21,7 @@ WATCardOffice::~WATCardOffice() {
 }
 
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
-    Job *job = new Job( { sid, amount, NULL } );
-    jobs.push_back( job );
-    return job->result;
+    return transfer( sid, amount, NULL );
 }
 
 WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount, WATCard *card ) {
@@ -90,6 +88,7 @@ void WATCardOffice::main() {
 
             for ( unsigned int i = 0; i < numCouriers; i++ ) {
                 jobs.push_back( NULL );
+                bench.signal();
             }
 
             printer.print( Printer::WATCardOffice, 'F' );
