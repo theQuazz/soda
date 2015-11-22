@@ -75,6 +75,8 @@ void WATCardOffice::Courier::main() {
 
         delete job;
     }
+
+    printer.print( Printer::Courier, id, 'F' );
 }
 
 void WATCardOffice::main() {
@@ -103,6 +105,7 @@ void WATCardOffice::main() {
             bench.signalBlock();
         }
         or _Accept( requestWork ) {
+            printer.print( Printer::WATCardOffice, 'W' );
         }
     }
 }
