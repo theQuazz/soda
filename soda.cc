@@ -31,7 +31,7 @@ void uMain::main() {
     // prase arguments
     try {
         switch ( argc ) {
-            default: throw std::invalid_argument( "argc must be less than 5" );
+            default: throw std::invalid_argument( "argc must be 3 or less" );
             case 3: seed = stoi_with_min( argv[2], 1 );
             case 2: configFile = argv[1];
             case 1: break;
