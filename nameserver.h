@@ -9,6 +9,9 @@ _Task NameServer {
     Printer &printer;
     VendingMachine **machines;
     unsigned int numVendingMachines, numStudents, *studentMachines;
+    VendingMachine *machine;
+    unsigned int id;
+    uCondition bench;
 
     void main();
   public:

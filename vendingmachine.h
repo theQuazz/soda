@@ -19,6 +19,11 @@ _Task VendingMachine {
     Printer &printer;
     unsigned int stock[NUM_FLAVOURS];
     const unsigned int id, sodaCost, maxStockPerFlavour;
+    uCondition bench;
+    Flavours flavour;
+    WATCard *card;
+    bool exc;
+    bool exc_type;
 
     void main();
 

@@ -73,6 +73,8 @@ void Printer::print( Printer::Kind kind, unsigned int lid, char state, int value
 }
 
 void Printer::print( Printer::Kind kind, unsigned int lid, char state, int value1, int value2 ) {
+    // main print function, called from all others
+
     unsigned int index = kind + lid;
 
     if ( kind > Student ) {
@@ -99,12 +101,14 @@ void Printer::flush() {
     std::osacquire out( std::cout );
 
     for ( unsigned int i = 0; i < numTotal; i++ ) {
-        if ( i ) out << '\t';
-        if ( ! buffer[i].used ) continue;
+        if ( i ) out << '\t'; // tab if not the first
+        if ( ! buffer[i].used ) continue; // no value for this item, skip
 
-        buffer[i].used = false;
+        buffer[i].used = false; // clear it for next time
 
-        out << buffer[i].state;
+        out << buffer[i].state; // print state
+
+        // print other values
 
         if ( buffer[i].value1 != SENTINEL ) {
             out << buffer[i].value1;
@@ -121,13 +125,15 @@ void Printer::finished( unsigned int index ) {
 
     buffer[index].used = false;
 
+    // flush first, if populated
     for ( unsigned int i = 0; i < numTotal; i++ ) {
         if ( buffer[i].used ) {
             flush();
-            break;
+            break; // flushed so no need to continue
         }
     }
 
+    // special printing for finished case
     for ( unsigned int i = 0; i < numTotal; i++ ) {
         if ( i ) std::cout << '\t';
 

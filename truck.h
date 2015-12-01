@@ -1,8 +1,6 @@
 #ifndef __TRUCK_H__
 #define __TRUCK_H__
 
-#include <algorithm>
-
 #include "MPRNG.h"
 #include "printer.h"
 #include "nameserver.h"

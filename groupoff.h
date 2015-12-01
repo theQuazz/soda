@@ -8,7 +8,7 @@
 _Task Groupoff {
     Printer &printer;
     const unsigned int numStudents, sodaCost, delay;
-    unsigned int cardIndex;
+    WATCard::FWATCard curFCard;
     WATCard::FWATCard *fcards;
     WATCard *cards;
 

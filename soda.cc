@@ -28,6 +28,7 @@ void uMain::main() {
     std::string configFile( "soda.config" );
     ConfigParms config;
 
+    // prase arguments
     try {
         switch ( argc ) {
             default: throw std::invalid_argument( "argc must be less than 5" );
@@ -36,10 +37,13 @@ void uMain::main() {
             case 1: break;
         }
 
+        // setup PRNG
         get_random().seed( seed );
+        // process config file
         processConfigFile( configFile.c_str(), config );
     }
     catch ( std::logic_error &e ) {
+        // print usage message
         std::cerr << e.what()
                   << std::endl
                   << "Usage: "
@@ -53,6 +57,7 @@ void uMain::main() {
         return;
     }
     catch ( uFile::Failure ) {
+        // error opening file
         std::cerr << "Unable to open file "
                   << configFile
                   << ", exiting..."
@@ -78,6 +83,7 @@ void uMain::main() {
     Parent parent( printer, bank, config.numStudents, config.parentalDelay );
     WATCardOffice office( printer, bank, config.numCouriers );
 
+    // setup groupoff and nameserver
     Groupoff groupoff(
         printer,
         config.numStudents,
@@ -91,6 +97,7 @@ void uMain::main() {
         config.numStudents
     );
 
+    // setup vendingmachines
     VendingMachine *vendingMachines[config.numVendingMachines];
 
     for ( unsigned int id = 0; id < config.numVendingMachines; id++ ) {
@@ -104,6 +111,7 @@ void uMain::main() {
     }
 
     {
+        // create bottling plant
         BottlingPlant bottlingPlant(
             printer,
             nameServer,
@@ -113,6 +121,7 @@ void uMain::main() {
             config.timeBetweenShipments
         );
 
+        // set up array of students
         Student *students[config.numStudents];
 
         for ( unsigned int id = 0; id < config.numStudents; id++ ) {
@@ -132,11 +141,13 @@ void uMain::main() {
         * otherwise, a deadlock can occur
         */
 
+        // free students
         for ( unsigned int id = 0; id < config.numStudents; id++ ) {
             delete students[id];
         }
     }
 
+    // free vendingmachines
     for ( unsigned int id = 0; id < config.numVendingMachines; id++ ) {
         delete vendingMachines[id];
     }
