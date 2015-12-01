@@ -38,9 +38,9 @@ void Truck::main() {
                 nextMachine = 0;
             }
 
-            printer.print( Printer::BottlingPlant, 'd', nextMachine, numSodas );
-
             VendingMachine *machine = machines[nextMachine];
+            printer.print( Printer::BottlingPlant, 'd', nextMachine->id, numSodas );
+
             unsigned int *inventory = machine->inventory();
             unsigned int unfilled = 0;
 

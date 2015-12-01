@@ -15,46 +15,57 @@ Student::Student(
     maxPurchases( maxPurchases ) {}
 
 void Student::main() {
-    unsigned int numPurchasesLeft = get_random()( 1, maxPurchases - 1 );
+    // Choose random number of purchases to make
+    unsigned int numPurchasesLeft = get_random()( 1, maxPurchases );
+    // Choose favourite flavour
     VendingMachine::Flavours favourite = static_cast<VendingMachine::Flavours>(
             get_random()( 0, VendingMachine::NUM_FLAVOURS - 1 )
     );
 
     printer.print( Printer::Student, id, 'S', favourite, numPurchasesLeft );
 
+    // Create watcard & giftcard
     WATCard::FWATCard watcard = cardOffice.create( id, 5 );
     WATCard::FWATCard giftcard = groupoff.giftCard();
 
+    // Get vending machine
     VendingMachine *machine = nameServer.getMachine( id );
     printer.print( Printer::Student, id, 'V', machine->getId() );
 
+    // For each purchase to make...
     for ( ; numPurchasesLeft > 0; ) {
         unsigned int delay = get_random()( 1, 10 );
         yield( delay );
 
+        // Loop until watcard not lost
         for ( ;; ) {
             try {
                 _Select( watcard ) {
+                    // Got watcard
                     machine->buy( favourite, *watcard );
+                    printer.print( Printer::Student, id, 'B', watcard()->getBalance() );
                 }
                 or _Select( giftcard ) {
+                    // Got giftcard
                     machine->buy( favourite, *giftcard );
                     printer.print( Printer::Student, id, 'G', giftcard()->getBalance() );
                     giftcard.reset();
                 }
-                printer.print( Printer::Student, id, 'B', watcard()->getBalance() );
                 numPurchasesLeft -= 1;
                 break;
             }
             catch ( WATCardOffice::Lost ) {
+                // Watcard office lost, get a new one and loop
                 printer.print( Printer::Student, id, 'L' );
                 watcard = cardOffice.create( id, 5 );
             }
             catch ( VendingMachine::Funds ) {
+                // Out of funds, transfer more funds to watcard
                 watcard = cardOffice.transfer( id, machine->cost() + 5, watcard );
                 break;
             }
             catch ( VendingMachine::Stock ) {
+                // Out of stock, get new machine from nameserver
                 machine = nameServer.getMachine( id );
                 printer.print( Printer::Student, id, 'V', machine->getId() );
                 break;
@@ -62,7 +73,13 @@ void Student::main() {
         }
     }
 
-    delete watcard();
+    try {
+        // Try to get watcard future & free memory
+        delete watcard();
+    } catch ( WATCardOffice::Lost ) {
+        // watcard was deleted in courier, no need to delete here
+        printer.print( Printer::Student, id, 'L' );
+    }
 
     printer.print( Printer::Student, id, 'F' );
 }

@@ -4,9 +4,9 @@ Bank::Bank( unsigned int numStudents ) :
   numStudents( numStudents ),
   accounts( new Account[numStudents] )
 {
-  for ( unsigned int i = 0; i < numStudents; i++ ) {
-      accounts[i].amount = 0;
-  }
+    for ( unsigned int i = 0; i < numStudents; i++ ) {
+        accounts[i].amount = 0;
+    }
 }
 
 Bank::~Bank() {

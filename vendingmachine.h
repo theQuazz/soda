@@ -11,9 +11,9 @@ _Task VendingMachine {
         Cola,
         RootBeer,
         GingerAle,
-        CreamSoda
+        CreamSoda,
+        NUM_FLAVOURS
     };
-    enum { NUM_FLAVOURS = CreamSoda + 1 };
 
   private:
     Printer &printer;

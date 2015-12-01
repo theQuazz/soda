@@ -34,6 +34,9 @@ WATCardOffice::Job *WATCardOffice::requestWork() {
     if ( jobs.empty() ) bench.wait();
     Job *job = jobs.front();
     jobs.pop_front();
+    if (job != NULL) {
+        printer.print( Printer::WATCardOffice, 'W' );
+    }
     return job;
 }
 
@@ -48,7 +51,6 @@ void WATCardOffice::Courier::main() {
 
     for ( ;; ) {
         Job *job = office.requestWork();
-
         if ( job == NULL ) {
             break;
         }
@@ -81,7 +83,7 @@ void WATCardOffice::Courier::main() {
 
 void WATCardOffice::main() {
     printer.print( Printer::WATCardOffice, 'S' );
-    
+
     for ( ;; ) {
         _Accept( ~WATCardOffice ) {
             for ( Job *job : jobs ) {
@@ -104,8 +106,6 @@ void WATCardOffice::main() {
             printer.print( Printer::WATCardOffice, 'T', jobs.back()->args.sid, jobs.back()->args.amount );
             bench.signalBlock();
         }
-        or _Accept( requestWork ) {
-            printer.print( Printer::WATCardOffice, 'W' );
-        }
+        or _Accept( requestWork ) {}
     }
 }
