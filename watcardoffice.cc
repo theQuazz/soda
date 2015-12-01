@@ -35,13 +35,8 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 }
 
 WATCardOffice::Job *WATCardOffice::requestWork() {
-    // Wait for job available
-    if ( jobs.empty() ) bench.wait();
     Job *job = jobs.front();
     jobs.pop_front();
-    if (job != NULL) {
-        printer.print( Printer::WATCardOffice, 'W' );
-    }
     return job;
 }
 
@@ -99,7 +94,10 @@ void WATCardOffice::main() {
 
     // Loop until destructed
     for ( ;; ) {
-        _Accept( ~WATCardOffice ) {
+        _When(!jobs.empty()) _Accept( requestWork ) { // pass job to worker
+            printer.print( Printer::WATCardOffice, 'W' );
+        }
+        or _Accept( ~WATCardOffice ) {
             // Clean up
             for ( Job *job : jobs ) {
                 delete job;
@@ -107,8 +105,8 @@ void WATCardOffice::main() {
 
             // Signal no more jobs to couriers
             for ( unsigned int i = 0; i < numCouriers; i++ ) {
-                jobs.push_back( NULL );
-                bench.signal();
+                jobs.push_back(NULL);
+                _Accept(requestWork);
             }
 
             printer.print( Printer::WATCardOffice, 'F' );
@@ -118,15 +116,10 @@ void WATCardOffice::main() {
         or _Accept( create ) {
             // Create watcard
             printer.print( Printer::WATCardOffice, 'C', jobs.back()->args.sid, jobs.back()->args.amount );
-            bench.signalBlock();
         }
         or _Accept( transfer ) {
             // Transfer funds
             printer.print( Printer::WATCardOffice, 'T', jobs.back()->args.sid, jobs.back()->args.amount );
-            bench.signalBlock();
-        }
-        or _Accept( requestWork ) {
-            // Pass job to worker
         }
     }
 }

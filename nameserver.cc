@@ -27,8 +27,7 @@ void NameServer::VMregister( VendingMachine *vendingmachine ) {
 
 VendingMachine *NameServer::getMachine( unsigned int _id ) {
     id = _id;
-    bench.wait(); // wait for main to process
-    return machine;
+    return machines[studentMachines[id]];
 }
 
 VendingMachine **NameServer::getMachineList() {
@@ -55,14 +54,10 @@ void NameServer::main() {
             break;
         }
         or _Accept( getMachine ) {
-            unsigned int orig = studentMachines[id];
-            printer.print( Printer::NameServer, 'N', id, orig );
+            printer.print( Printer::NameServer, 'N', id, studentMachines[id] );
             // update student machine index
             studentMachines[id] = ( studentMachines[id] + 1 ) % numVendingMachines;
             // pass back original machine
-            machine = machines[orig];
-            // allow getMachine method to finish
-            bench.signalBlock();
         }
         or _Accept( getMachineList ) {}
     }

@@ -11,7 +11,6 @@ _Task NameServer {
     unsigned int numVendingMachines, numStudents, *studentMachines;
     VendingMachine *machine;
     unsigned int id;
-    uCondition bench;
 
     void main();
   public:

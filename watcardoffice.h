@@ -34,7 +34,6 @@ _Task WATCardOffice {
     Bank &bank;
     Courier **couriers;
     std::list<Job *> jobs;
-    uCondition bench;
 
     void main();
   public:
