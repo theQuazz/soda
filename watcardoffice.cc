@@ -59,11 +59,11 @@ void WATCardOffice::Courier::main() {
         }
 
         if ( job->result.cancelled() ) {
-          if ( job->args.curr ) {
-              delete job->args.curr;
-          }
-          delete job;
-          continue;
+            if ( job->args.curr ) {
+                delete job->args.curr;
+            }
+            delete job;
+            continue;
         }
 
         printer.print( Printer::Courier, id, 't', job->args.sid, job->args.amount );
