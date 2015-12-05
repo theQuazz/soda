@@ -58,6 +58,14 @@ void WATCardOffice::Courier::main() {
             break;
         }
 
+        if ( job->result.cancelled() ) {
+          if ( job->args.curr ) {
+              delete job->args.curr;
+          }
+          delete job;
+          continue;
+        }
+
         printer.print( Printer::Courier, id, 't', job->args.sid, job->args.amount );
 
         // Wait for money available in bank account for student
@@ -70,7 +78,7 @@ void WATCardOffice::Courier::main() {
             }
             job->result.exception( new Lost() );
         }
-        else if ( ! job->result.cancelled() ) {
+        else {
             if ( ! job->args.curr ) {
                 // No card provided, create a new one
                 job->args.curr = new WATCard();
@@ -94,7 +102,7 @@ void WATCardOffice::main() {
 
     // Loop until destructed
     for ( ;; ) {
-        _When(!jobs.empty()) _Accept( requestWork ) { // pass job to worker
+        _When( ! jobs.empty() ) _Accept( requestWork ) { // pass job to worker
             printer.print( Printer::WATCardOffice, 'W' );
         }
         or _Accept( ~WATCardOffice ) {
@@ -105,8 +113,8 @@ void WATCardOffice::main() {
 
             // Signal no more jobs to couriers
             for ( unsigned int i = 0; i < numCouriers; i++ ) {
-                jobs.push_back(NULL);
-                _Accept(requestWork);
+                jobs.push_back( NULL );
+                _Accept( requestWork );
             }
 
             printer.print( Printer::WATCardOffice, 'F' );
