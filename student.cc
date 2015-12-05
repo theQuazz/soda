@@ -75,7 +75,12 @@ void Student::main() {
 
     if ( watcard.available() ) {
         // Watcard isn't lost, free memory
-        delete static_cast<WATCard*>( watcard );
+        try {
+            delete static_cast<WATCard*>( watcard );
+        } 
+        catch ( VendingMachine::Lost ) {
+            printer.print( Printer::Student, id, 'L' );
+        }
     } else {
         // Tell courrier that we don't need to replace our lost watcard
         watcard.cancel();
