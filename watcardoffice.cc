@@ -70,7 +70,7 @@ void WATCardOffice::Courier::main() {
             }
             job->result.exception( new Lost() );
         }
-        else {
+        else if ( ! job->result.cancelled() ) {
             if ( ! job->args.curr ) {
                 // No card provided, create a new one
                 job->args.curr = new WATCard();
