@@ -78,7 +78,7 @@ void Student::main() {
         try {
             delete static_cast<WATCard*>( watcard );
         } 
-        catch ( VendingMachine::Lost ) {
+        catch ( WATCardOffice::Lost ) {
             printer.print( Printer::Student, id, 'L' );
         }
     } else {
