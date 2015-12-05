@@ -73,12 +73,17 @@ void Student::main() {
         }
     }
 
-    try {
-        // Try to get watcard future & free memory
-        delete watcard();
-    } catch ( WATCardOffice::Lost ) {
-        // watcard was deleted in courier, no need to delete here
-        printer.print( Printer::Student, id, 'L' );
+    if ( watcard.available() ) {
+        // Watcard isn't lost, free memory
+        try {
+            delete static_cast<WATCard*>( watcard );
+        } 
+        catch ( WATCardOffice::Lost ) {
+            printer.print( Printer::Student, id, 'L' );
+        }
+    } else {
+        // Tell courrier that we don't need to replace our lost watcard
+        watcard.cancel();
     }
 
     printer.print( Printer::Student, id, 'F' );
